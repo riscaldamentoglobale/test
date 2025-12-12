@@ -36,14 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
         y: 0,
         duration: 1.2,
         ease: "power3.out",
-        stagger: 0.1 // Ritardo progressivo tra le parole per l'effetto smooth
+        stagger: 0.15 // Leggermente più lento per massima fluidità
     }, "+=0.2") 
     .to("#hero-subtitle", {
         opacity: 1,
         y: 0,
         duration: 1.0,
         ease: "power2.out"
-    }, "<0.4") // Si sovrappone leggermente alla fine del titolo
+    }, "<0.4")
     .to("#hero-quote", {
         opacity: 1,
         y: 0,
@@ -59,10 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // -----------------------------------------------------------
-// 2. Parallasse e Contatore (Sezione Impatto)
+// 2. Parallasse e Contatore
 // -----------------------------------------------------------
 
-// Aggiungi un leggero parallasse al contenuto dell'header e zoom al video
+// ... (Il codice Parallasse e Contatore rimane invariato per funzionalità) ...
+
 gsap.to(".hero-content", {
     yPercent: 25, 
     ease: "none",
@@ -85,8 +86,6 @@ gsap.to("#background-video", {
     }
 });
 
-
-// Contatore Numerico Animato con ScrollTrigger
 const counter = { value: 0 };
 const finalValue = 1.2;
 const tempCounterElement = document.getElementById('temp-counter');
@@ -101,7 +100,6 @@ gsap.to(counter, {
     },
     onUpdate: () => {
         tempCounterElement.textContent = counter.value.toFixed(1) + '°C';
-        // Effetto Colore: diventa Rosso man mano che si avvicina a 1.2°C
         const redValue = Math.min(255, Math.floor(counter.value * 255 / 1.2));
         const color = `rgb(255, ${255 - redValue}, 0)`;
         tempCounterElement.style.color = color;
@@ -110,35 +108,35 @@ gsap.to(counter, {
 
 
 // -----------------------------------------------------------
-// 3. SCROLL-TELLING AVANZATO (Sezione Dati)
+// 3. SCROLL-TELLING AVANZATO (Bug Fix)
 // -----------------------------------------------------------
 
 const panels = gsap.utils.toArray(".data-panel");
 const scrollSection = document.getElementById('dati');
 
-// Definiamo la durata dello scroll necessaria per scorrere tra un pannello e l'altro
-const panelScrollLength = 1000; 
+// Definiamo una durata fissa generosa per il pin, per garantire un rilascio smooth
+const PIN_DURATION_PX = 4000; 
 
-// Definisci la Timeline Principale per la Sezione Dati
 let scrollTimeline = gsap.timeline({
     scrollTrigger: {
         trigger: scrollSection,
         pin: true, 
         start: "top top", 
-        // L'end è calcolato sulla base del numero di pannelli per la massima fluidità
-        end: `+=${panels.length * panelScrollLength}`, 
+        end: `+=${PIN_DURATION_PX}`, // Durata fissa
         scrub: 1, 
-        // markers: true, // DECOMMENTA PER DEBUGGING
+        // markers: true, // DECOMMENTA PER DEBUGGING se devi vedere i trigger
     }
 });
 
+// Tempo di animazione totale per un ciclo completo di pannello (ingresso + hold + uscita)
+const cycleTime = 1.0; 
 
-// Aggiungi le sequenze di animazione per ogni pannello
 panels.forEach((panel, index) => {
     
-    const panelStart = index * panelScrollLength;
+    // Posizione di ingresso del pannello nella timeline (0, 1, 2, 3...)
+    const position = index * cycleTime; 
 
-    // Animazione di Ingresso (Fade-in e Slide)
+    // 1. Ingresso del pannello (Fade-in e Slide)
     scrollTimeline.to(panel, {
         opacity: 1,
         y: 0,
@@ -148,38 +146,35 @@ panels.forEach((panel, index) => {
             gsap.set(panels, { zIndex: 1 });
             gsap.set(panel, { zIndex: 10 }); 
         }
-    }, panelStart / panelScrollLength) 
+    }, position); 
     
-    // Animazioni Grafiche Interne al Pannello
-    const timelinePosition = panelStart / panelScrollLength + 0.5; // Inizia 0.5s dopo l'ingresso
+    // 2. Animazioni Grafiche Interne (Si sovrappongono all'ingresso)
+    const graphicPosition = position + 0.3; // 0.3 secondi dopo l'ingresso
     
     if (panel.id === 'panel-1') {
-        // Grafico Livello del Mare (Altezza sale)
         scrollTimeline.to(panel.querySelector('.water-level'), {
             height: '75%',
             duration: 1.0,
             ease: "power1.inOut"
-        }, timelinePosition);
+        }, graphicPosition);
     } 
     else if (panel.id === 'panel-2') {
-        // Grafico CO2 (L'indicatore ruota)
         scrollTimeline.to(panel.querySelector('.gauge-fill'), {
             opacity: 1,
             rotation: 120, 
             duration: 1.0,
             ease: "power2.out"
-        }, timelinePosition);
+        }, graphicPosition);
     }
     else if (panel.id === 'panel-3') {
-        // Grafico Ghiacciaio (La linea d'acqua si abbassa)
         scrollTimeline.to(panel.querySelector('.glacier-top'), {
             top: '80%', 
             duration: 1.0,
             ease: "power2.out"
-        }, timelinePosition);
+        }, graphicPosition);
     }
     
-    // Animazione di Uscita (Fade-out e Slide-up)
+    // 3. Uscita del pannello (Solo se non è l'ultimo)
     if (index < panels.length - 1) {
         scrollTimeline.to(panel, {
             opacity: 0,
@@ -189,6 +184,8 @@ panels.forEach((panel, index) => {
             onComplete: () => {
                 gsap.set(panel, { y: 50 });
             }
-        }, panelStart / panelScrollLength + 1.5); // 1.5 secondi dopo l'ingresso
+        }, position + cycleTime - 0.5); // Finisce 0.5s prima che il ciclo finisca
     }
+    // L'ultimo pannello (panel-3) rimane visibile fino alla fine della timeline di ScrollTrigger,
+    // garantendo una transizione smooth alla sezione #soluzioni quando il pin si rilascia.
 });
