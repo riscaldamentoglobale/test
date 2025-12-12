@@ -1,14 +1,20 @@
-/* Configurazione Variabili (Ultra Dark con Glow) */
+/* Configurazione Variabili (Ultra Dark con Glow Soffusa) */
 :root {
-    --primary-color: #00e5ff; /* Ciano brillante per Glow */
-    --accent-color: #ff5722; /* Arancione/Rosso per allarme */
-    --dark-background: #06060a; /* Sfondo ultra scuro per contrasto */
-    --light-text: #f0f0f0;
-    --secondary-text: #aaaaaa;
+    --primary-color: #00bcd4; /* Ciano leggermente più morbido */
+    --accent-color: #ff6f61; /* Corallo per allarme */
+    --dark-background: #08080a; /* Sfondo ultra scuro e profondo */
+    --light-text: #e0e0e0;
+    --secondary-text: #a0a0a0;
     --font-stack: 'Montserrat', sans-serif;
 }
 
-/* Stile Globale e Parallasse Body */
+/* Stile Globale e Transizioni Fluidi */
+* {
+    /* Migliora la percezione della fluidità */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 body {
     font-family: var(--font-stack);
     margin: 0;
@@ -16,13 +22,12 @@ body {
     background-color: var(--dark-background);
     color: var(--light-text);
     line-height: 1.6;
-    /* Immagine di Sfondo fissa per effetto Parallasse con GSAP */
     background-image: url('dark-texture.jpg'); 
     background-attachment: fixed; 
     background-size: cover;
 }
 
-/* Hero Section (Intestazione) */
+/* Hero Section: Pulizia Visiva */
 .hero {
     position: relative;
     height: 100vh;
@@ -52,7 +57,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7); 
+    background: rgba(0, 0, 0, 0.75); 
     z-index: -1;
 }
 
@@ -62,21 +67,26 @@ body {
 }
 
 .hero h1 {
-    font-size: 5em;
+    font-size: 5.5em; 
     font-weight: 900;
-    margin-bottom: 0.1em;
+    letter-spacing: 5px; 
     color: var(--primary-color);
-    text-shadow: 0 0 20px rgba(0, 229, 255, 0.9);
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); 
+}
+
+/* Stile per le singole parole animate (aggiunto da JS) */
+.word-split {
+    display: inline-block;
+    white-space: nowrap; /* Mantiene la parola intera */
 }
 
 .hero h2 {
     font-size: 3em;
-    font-weight: 700;
-    margin-bottom: 1em;
+    font-weight: 300; 
+    margin-bottom: 0.5em;
     color: var(--light-text);
 }
 
-/* Pulsante CTA */
 .cta-button {
     display: inline-block;
     padding: 15px 30px;
@@ -87,13 +97,14 @@ body {
     font-weight: 700;
     border-radius: 50px;
     transition: all 0.3s;
-    box-shadow: 0 0 15px rgba(255, 87, 34, 0.7);
+    box-shadow: 0 0 10px rgba(255, 111, 97, 0.7);
+    border: 1px solid var(--accent-color);
 }
 
 .cta-button:hover {
-    background-color: #ff8a65;
+    background-color: #ff8a80;
     transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 87, 34, 1);
+    box-shadow: 0 0 20px rgba(255, 111, 97, 1);
 }
 
 /* Sezioni Generali */
@@ -105,13 +116,13 @@ body {
 }
 
 .section h2 {
-    font-size: 2.5em;
+    font-size: 2.8em;
     color: var(--primary-color);
     margin-bottom: 50px;
-    border-bottom: 5px solid var(--primary-color);
+    border-bottom: 4px solid var(--primary-color);
     display: inline-block;
     padding-bottom: 10px;
-    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    text-shadow: 0 0 5px rgba(0, 229, 255, 0.3);
 }
 
 /* Contatore Animato */
@@ -120,7 +131,7 @@ body {
     padding: 50px;
     background: linear-gradient(145deg, #101015, #000000);
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0, 229, 255, 0.2);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 229, 255, 0.1);
     display: inline-block;
     border: 1px solid rgba(0, 229, 255, 0.1);
 }
@@ -134,21 +145,18 @@ body {
     line-height: 1;
 }
 
-/* STILI PER SCROLL-TELLING (#dati) */
+/* STILI SCROLL-TELLING (#dati) */
 #dati {
-    min-height: 400vh; /* Estende la sezione per lo scroll-telling */
-    background-color: transparent;
+    min-height: 400vh; 
     padding-top: 0;
     padding-bottom: 0;
+    /* Gradiente per unire la sezione precedente in modo più smooth */
+    background: linear-gradient(to bottom, var(--dark-background) 0%, #08080a 5%); 
 }
 
 .scroll-container {
     position: relative;
     height: 100vh;
-}
-
-.scroll-spacer {
-    height: 350vh; /* Spazio per lo scroll */
 }
 
 .data-panel {
@@ -165,9 +173,9 @@ body {
 }
 
 .panel-content {
-    background: rgba(13, 13, 16, 0.95);
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 0 40px rgba(0, 229, 255, 0.5);
+    background: rgba(13, 13, 16, 0.9);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.3), inset 0 0 15px rgba(0, 229, 255, 0.1);
     padding: 40px;
     border-radius: 10px;
     max-width: 800px;
@@ -178,19 +186,19 @@ body {
     font-size: 3em;
     color: var(--primary-color);
     margin-bottom: 10px;
+    font-weight: 700;
 }
 
 .key-stat {
-    font-size: 4em;
+    font-size: 3.5em;
     font-weight: 900;
     color: var(--accent-color);
-    text-shadow: 0 0 15px rgba(255, 87, 34, 0.8);
+    text-shadow: 0 0 10px rgba(255, 111, 97, 0.7);
     display: block;
     margin-top: 20px;
 }
 
-/* Grafici Placeholders Animabili (GSAP Targets) */
-
+/* Grafici Placeholders Animabili */
 .data-visual {
     width: 100%;
     max-width: 300px;
@@ -201,29 +209,26 @@ body {
     overflow: hidden;
     border-radius: 5px;
     position: relative;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
 }
 
-/* Grafico 1: Livello del Mare */
-.sea-level-chart {
-    height: 250px;
-}
+.sea-level-chart { height: 250px; }
 .water-level {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 0%; /* 0% Iniziale, GSAP lo animerà */
-    background: linear-gradient(to top, var(--primary-color) 20%, #0097a7 80%);
-    opacity: 0.7;
-    transition: none; /* Disabilita CSS transition per usare GSAP */
+    height: 0%; 
+    background: linear-gradient(to top, var(--primary-color) 20%, #00796b 80%);
+    opacity: 0.9;
 }
 
-/* Grafico 2: CO2 Gauge */
 .co2-gauge {
     border-radius: 50%;
     height: 250px;
     width: 250px;
     background: radial-gradient(circle, #000 60%, #1a1a20 100%);
+    border: 3px solid var(--primary-color);
 }
 .gauge-fill {
     position: absolute;
@@ -232,15 +237,14 @@ body {
     width: 100%;
     height: 100%;
     transform-origin: 0 100%;
-    transform: translate(-50%, -50%) rotate(-135deg); /* Punto di partenza */
-    border: 15px solid transparent;
+    transform: translate(-50%, -50%) rotate(-135deg); 
+    border: 20px solid transparent;
     border-radius: 50%;
     border-top-color: var(--accent-color); 
     border-right-color: var(--accent-color);
-    opacity: 0; /* Inizialmente nascosto */
+    opacity: 0; 
 }
 
-/* Grafico 3: Ghiacciaio */
 .glacier-melt-graphic {
     background: linear-gradient(to top, #fff 10%, #ccc 90%);
     height: 250px;
@@ -248,11 +252,11 @@ body {
 }
 .glacier-top {
     position: absolute;
-    top: 0%; /* Iniziale 0%, GSAP lo sposterà verso il basso */
+    top: 0%; 
     left: 0;
     width: 100%;
     height: 50%;
-    background-color: #00bcd4; /* Colore "liquido" */
+    background-color: #00bcd4; 
     opacity: 0.8;
 }
 
