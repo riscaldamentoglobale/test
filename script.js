@@ -3,50 +3,58 @@ AOS.init({
     duration: 1200,
     once: true, 
     easing: 'ease-out-back',
-    // offset: 150, // Parte prima di raggiungere l'elemento
 });
 
 // Registra i plugin necessari di GSAP
 gsap.registerPlugin(ScrollTrigger);
 
 // -----------------------------------------------------------
-// 1. Animazione Iniziale (Hero Section) con GSAP
+// 1. Animazione Titolo Hero "Smooth" (Split-Text Simulation)
 // -----------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Configura lo stato iniziale
-    gsap.set(["#hero-title", "#hero-subtitle", "#hero-quote", "#cta-button"], { opacity: 0, y: 50 });
+    const title = document.getElementById('hero-title');
+
+    // Suddivide il titolo in span per animare ogni parola separatamente
+    const titleWords = title.textContent.split(' ');
+    title.innerHTML = titleWords.map(word => `<span class="word-split">${word}</span>`).join(' ');
+
+    // Configura lo stato iniziale di tutti gli elementi
+    gsap.set(".word-split", { opacity: 0, y: 30 });
+    gsap.set(["#hero-subtitle", "#hero-quote", "#cta-button"], { opacity: 0, y: 50 });
     
     // Timeline di animazione
     const tl = gsap.timeline();
     
     tl.to(".hero-overlay", {
-        opacity: 0.7,
+        opacity: 0.75,
         duration: 0.5
     })
-    .to("#hero-title", {
+    // Animazione di ingresso "Smooth" per le parole
+    .to(".word-split", {
         opacity: 1,
         y: 0,
-        duration: 1.5,
-        ease: "power4.out"
+        duration: 1.2,
+        ease: "power3.out",
+        stagger: 0.1 // Ritardo progressivo tra le parole per l'effetto smooth
     }, "+=0.2") 
     .to("#hero-subtitle", {
         opacity: 1,
         y: 0,
-        duration: 1.2,
-        ease: "power3.out"
-    }, "<0.3")
+        duration: 1.0,
+        ease: "power2.out"
+    }, "<0.4") // Si sovrappone leggermente alla fine del titolo
     .to("#hero-quote", {
         opacity: 1,
         y: 0,
-        duration: 1.0,
+        duration: 0.8,
         ease: "power2.out"
     }, "<0.4")
     .to("#cta-button", {
         opacity: 1,
         y: 0,
-        duration: 1.0,
-        ease: "elastic.out(1, 0.5)"
+        duration: 0.8,
+        ease: "back.out(1.7)"
     }, "<0.3");
 });
 
@@ -108,15 +116,19 @@ gsap.to(counter, {
 const panels = gsap.utils.toArray(".data-panel");
 const scrollSection = document.getElementById('dati');
 
+// Definiamo la durata dello scroll necessaria per scorrere tra un pannello e l'altro
+const panelScrollLength = 1000; 
+
 // Definisci la Timeline Principale per la Sezione Dati
 let scrollTimeline = gsap.timeline({
     scrollTrigger: {
         trigger: scrollSection,
         pin: true, 
         start: "top top", 
-        end: "+=3500", // Estende la durata dello scroll per l'animazione
+        // L'end è calcolato sulla base del numero di pannelli per la massima fluidità
+        end: `+=${panels.length * panelScrollLength}`, 
         scrub: 1, 
-        // markers: true, // DECOMMENTA PER DEBUG
+        // markers: true, // DECOMMENTA PER DEBUGGING
     }
 });
 
@@ -124,6 +136,8 @@ let scrollTimeline = gsap.timeline({
 // Aggiungi le sequenze di animazione per ogni pannello
 panels.forEach((panel, index) => {
     
+    const panelStart = index * panelScrollLength;
+
     // Animazione di Ingresso (Fade-in e Slide)
     scrollTimeline.to(panel, {
         opacity: 1,
@@ -131,53 +145,50 @@ panels.forEach((panel, index) => {
         duration: 0.5,
         ease: "power2.inOut",
         onStart: () => {
-            // Assicura che solo il pannello corrente sia visibile
             gsap.set(panels, { zIndex: 1 });
             gsap.set(panel, { zIndex: 10 }); 
         }
-    })
+    }, panelStart / panelScrollLength) 
     
     // Animazioni Grafiche Interne al Pannello
+    const timelinePosition = panelStart / panelScrollLength + 0.5; // Inizia 0.5s dopo l'ingresso
+    
     if (panel.id === 'panel-1') {
         // Grafico Livello del Mare (Altezza sale)
         scrollTimeline.to(panel.querySelector('.water-level'), {
             height: '75%',
             duration: 1.0,
             ease: "power1.inOut"
-        }, "<0.2");
+        }, timelinePosition);
     } 
     else if (panel.id === 'panel-2') {
         // Grafico CO2 (L'indicatore ruota)
         scrollTimeline.to(panel.querySelector('.gauge-fill'), {
             opacity: 1,
-            rotation: 120, // Rotazione da -135deg a -135 + 120 = -15deg (riempimento)
+            rotation: 120, 
             duration: 1.0,
             ease: "power2.out"
-        }, "<0.2");
+        }, timelinePosition);
     }
     else if (panel.id === 'panel-3') {
         // Grafico Ghiacciaio (La linea d'acqua si abbassa)
         scrollTimeline.to(panel.querySelector('.glacier-top'), {
-            top: '80%', // Simula lo scioglimento
+            top: '80%', 
             duration: 1.0,
             ease: "power2.out"
-        }, "<0.2");
+        }, timelinePosition);
     }
     
-    // Mantenimento (Pausa per la lettura)
-    scrollTimeline.to(panel, {
-        duration: 2.0, 
-    })
-    
-    // Animazione di Uscita (Fade-out)
-    .to(panel, {
-        opacity: 0,
-        y: -50,
-        duration: 0.5,
-        ease: "power2.inOut",
-        onComplete: () => {
-            gsap.set(panel, { y: 50 }); // Reset per la prossima volta
-        }
-    });
-
+    // Animazione di Uscita (Fade-out e Slide-up)
+    if (index < panels.length - 1) {
+        scrollTimeline.to(panel, {
+            opacity: 0,
+            y: -50,
+            duration: 0.5,
+            ease: "power2.inOut",
+            onComplete: () => {
+                gsap.set(panel, { y: 50 });
+            }
+        }, panelStart / panelScrollLength + 1.5); // 1.5 secondi dopo l'ingresso
+    }
 });
