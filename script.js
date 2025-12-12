@@ -1,94 +1,84 @@
-// Inizializza AOS per le animazioni al caricamento/scroll semplici
+// Registra i plugin necessari di GSAP
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+// Inizializza AOS
 AOS.init({
-    duration: 1200,
+    duration: 1500, // Durata più lunga per un effetto più cinematico
     once: true, 
-    easing: 'ease-out-back',
+    easing: 'power3.out',
 });
 
-// Registra i plugin necessari di GSAP
-gsap.registerPlugin(ScrollTrigger);
-
 // -----------------------------------------------------------
-// 1. Animazione Titolo Hero "Smooth" (Split-Text Simulation)
+// 1. Animazione Titolo Hero "Glitch/Cinematic"
 // -----------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     
-    const title = document.getElementById('hero-title');
-
-    // Suddivide il titolo in span per animare ogni parola separatamente
-    const titleWords = title.textContent.split(' ');
-    title.innerHTML = titleWords.map(word => `<span class="word-split">${word}</span>`).join(' ');
-
-    // Configura lo stato iniziale di tutti gli elementi
-    gsap.set(".word-split", { opacity: 0, y: 30 });
-    gsap.set(["#hero-subtitle", "#hero-quote", "#cta-button"], { opacity: 0, y: 50 });
+    // Configura lo stato iniziale
+    gsap.set(["#hero-title", "#hero-subtitle", "#hero-quote", "#cta-button"], { opacity: 0, y: 50 });
     
-    // Timeline di animazione
+    // Timeline Principale
     const tl = gsap.timeline();
     
-    tl.to(".hero-overlay", {
-        opacity: 0.75,
-        duration: 0.5
-    })
-    // Animazione di ingresso "Smooth" per le parole
-    .to(".word-split", {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        stagger: 0.15 // Leggermente più lento per massima fluidità
-    }, "+=0.2") 
-    .to("#hero-subtitle", {
-        opacity: 1,
-        y: 0,
-        duration: 1.0,
-        ease: "power2.out"
-    }, "<0.4")
-    .to("#hero-quote", {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out"
-    }, "<0.4")
-    .to("#cta-button", {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "back.out(1.7)"
-    }, "<0.3");
+    // A. Ingresso drammatico e glitch
+    tl.to(".hero-overlay", { opacity: 0.95, duration: 0.5 })
+      .to("#hero-title", {
+            opacity: 1,
+            y: 0,
+            duration: 0.1, // Ingresso rapido
+            ease: "none"
+        }, "+=0.2")
+        // Applicazione di un effetto glitch temporaneo sul titolo
+        .to("#hero-title", {
+            duration: 0.5,
+            textShadow: "0 0 50px #ff5252, 0 0 20px #00e5ff",
+            letterSpacing: 15,
+            y: "-=5",
+            ease: "steps(1)", // Simula il glitch
+            repeat: 1, 
+            yoyo: true,
+        })
+        .to("#hero-title", {
+            duration: 0.5,
+            textShadow: "0 0 20px var(--primary-color)",
+            letterSpacing: 10,
+            y: 0,
+            ease: "power2.out",
+        }, "<0.5") // Ritorna alla normalità
+        
+        // B. Ingresso smooth degli altri elementi
+        .to("#hero-subtitle", {
+            opacity: 1,
+            y: 0,
+            duration: 1.0,
+            ease: "power2.out"
+        }, "<0.4")
+        .to("#hero-quote", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        }, "<0.4")
+        .to("#cta-button", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "back.out(1.7)"
+        }, "<0.3");
 });
 
 // -----------------------------------------------------------
-// 2. Parallasse e Contatore
+// 2. Parallasse e Contatore (Dinamico e Visivo)
 // -----------------------------------------------------------
 
-// ... (Il codice Parallasse e Contatore rimane invariato per funzionalità) ...
+// Parallasse del contenuto Hero e Video
+gsap.to(".hero-content", { yPercent: 25, ease: "none", scrollTrigger: { trigger: "body", start: "top top", end: "bottom top", scrub: true } });
+gsap.to("#background-video", { scale: 1.15, ease: "none", scrollTrigger: { trigger: "body", start: "top top", end: "bottom top", scrub: true } });
 
-gsap.to(".hero-content", {
-    yPercent: 25, 
-    ease: "none",
-    scrollTrigger: {
-        trigger: "body",
-        start: "top top",
-        end: "bottom top",
-        scrub: true 
-    }
-});
-
-gsap.to("#background-video", {
-    scale: 1.15,
-    ease: "none",
-    scrollTrigger: {
-        trigger: "body",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-    }
-});
-
+// Contatore Numerico Animato con Glow Indicator
 const counter = { value: 0 };
 const finalValue = 1.2;
 const tempCounterElement = document.getElementById('temp-counter');
+const glowIndicator = document.querySelector('.glow-indicator');
 
 gsap.to(counter, {
     value: finalValue,
@@ -99,93 +89,103 @@ gsap.to(counter, {
         toggleActions: "play none none none",
     },
     onUpdate: () => {
-        tempCounterElement.textContent = counter.value.toFixed(1) + '°C';
-        const redValue = Math.min(255, Math.floor(counter.value * 255 / 1.2));
+        const currentValue = counter.value;
+        tempCounterElement.textContent = currentValue.toFixed(1) + '°C';
+        
+        // Calcolo del colore e della scala del glow (più caldo = più rosso e grande)
+        const intensity = currentValue / finalValue;
+        const redValue = Math.min(255, Math.floor(intensity * 255));
+        
         const color = `rgb(255, ${255 - redValue}, 0)`;
         tempCounterElement.style.color = color;
+        
+        // Animazione del glow in base all'intensità
+        gsap.to(glowIndicator, {
+            scale: 1 + intensity * 0.5, // Si ingrandisce fino al 50%
+            backgroundColor: color,
+            x: intensity * 100, // Spostamento laterale per effetto dinamico
+            duration: 0.1,
+            ease: "none"
+        });
     }
 });
 
 
 // -----------------------------------------------------------
-// 3. SCROLL-TELLING AVANZATO (Bug Fix)
+// 3. SCROLL-TELLING AVANZATO (Parallasse 3D e Bug Fix)
 // -----------------------------------------------------------
 
 const panels = gsap.utils.toArray(".data-panel");
 const scrollSection = document.getElementById('dati');
 
-// Definiamo una durata fissa generosa per il pin, per garantire un rilascio smooth
+// Durata del PIN: 4000px è una buona misura per 3-4 pannelli su schermi standard
 const PIN_DURATION_PX = 4000; 
+const cycleTime = 1.0; 
 
 let scrollTimeline = gsap.timeline({
     scrollTrigger: {
         trigger: scrollSection,
         pin: true, 
         start: "top top", 
-        end: `+=${PIN_DURATION_PX}`, // Durata fissa
+        end: `+=${PIN_DURATION_PX}`, 
         scrub: 1, 
-        // markers: true, // DECOMMENTA PER DEBUGGING se devi vedere i trigger
     }
 });
 
-// Tempo di animazione totale per un ciclo completo di pannello (ingresso + hold + uscita)
-const cycleTime = 1.0; 
-
 panels.forEach((panel, index) => {
     
-    // Posizione di ingresso del pannello nella timeline (0, 1, 2, 3...)
     const position = index * cycleTime; 
 
-    // 1. Ingresso del pannello (Fade-in e Slide)
+    // A. Ingresso del pannello (Fade-in, Slide e leggero Zoom)
     scrollTimeline.to(panel, {
         opacity: 1,
         y: 0,
+        scale: 1,
         duration: 0.5,
         ease: "power2.inOut",
         onStart: () => {
-            gsap.set(panels, { zIndex: 1 });
-            gsap.set(panel, { zIndex: 10 }); 
+            gsap.set(panels, { zIndex: 1, scale: 0.95, y: 50 }); // Stato iniziale
+            gsap.set(panel, { zIndex: 10, pointerEvents: 'auto' }); 
         }
     }, position); 
     
-    // 2. Animazioni Grafiche Interne (Si sovrappongono all'ingresso)
-    const graphicPosition = position + 0.3; // 0.3 secondi dopo l'ingresso
+    // B. Animazioni Grafiche Interne (Parallasse dinamico)
+    const graphicPosition = position + 0.3; 
     
+    const visual = panel.querySelector('.data-visual');
+    const parallaxSpeed = parseFloat(visual.getAttribute('data-parallax-speed')) || 0;
+    
+    // Animazione di parallasse 3D sul pannello
+    scrollTimeline.to(panel, {
+        x: 100 * parallaxSpeed, // Spostamento orizzontale
+        rotationY: 10 * parallaxSpeed, // Rotazione 3D
+        duration: cycleTime - 0.5, // Durata per il mantenimento
+        ease: "none"
+    }, position);
+
+    // Animazioni interne specifiche
     if (panel.id === 'panel-1') {
-        scrollTimeline.to(panel.querySelector('.water-level'), {
-            height: '75%',
-            duration: 1.0,
-            ease: "power1.inOut"
-        }, graphicPosition);
+        scrollTimeline.to(panel.querySelector('.water-level'), { height: '75%', duration: 1.0, ease: "power1.inOut" }, graphicPosition);
     } 
     else if (panel.id === 'panel-2') {
-        scrollTimeline.to(panel.querySelector('.gauge-fill'), {
-            opacity: 1,
-            rotation: 120, 
-            duration: 1.0,
-            ease: "power2.out"
-        }, graphicPosition);
+        scrollTimeline.to(panel.querySelector('.gauge-fill'), { opacity: 1, rotation: 120, duration: 1.0, ease: "power2.out" }, graphicPosition);
     }
     else if (panel.id === 'panel-3') {
-        scrollTimeline.to(panel.querySelector('.glacier-top'), {
-            top: '80%', 
-            duration: 1.0,
-            ease: "power2.out"
-        }, graphicPosition);
+        scrollTimeline.to(panel.querySelector('.glacier-top'), { top: '80%', duration: 1.0, ease: "power2.out" }, graphicPosition);
+        scrollTimeline.to(panel.querySelector('.glacier-crack'), { opacity: 1, duration: 0.5, ease: "power1.out" }, graphicPosition + 0.5);
     }
     
-    // 3. Uscita del pannello (Solo se non è l'ultimo)
+    // C. Uscita del pannello
     if (index < panels.length - 1) {
         scrollTimeline.to(panel, {
             opacity: 0,
             y: -50,
+            scale: 0.9,
             duration: 0.5,
             ease: "power2.inOut",
             onComplete: () => {
-                gsap.set(panel, { y: 50 });
+                gsap.set(panel, { y: 50, pointerEvents: 'none' });
             }
-        }, position + cycleTime - 0.5); // Finisce 0.5s prima che il ciclo finisca
+        }, position + cycleTime - 0.5); 
     }
-    // L'ultimo pannello (panel-3) rimane visibile fino alla fine della timeline di ScrollTrigger,
-    // garantendo una transizione smooth alla sezione #soluzioni quando il pin si rilascia.
 });
