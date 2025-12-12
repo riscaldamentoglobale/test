@@ -1,102 +1,181 @@
-/* Configurazione Variabili (Ultra Dark con Glow Soffusa) */
+/* Configurazione Variabili (Ultra Dark, Deep Space) */
 :root {
-    --primary-color: #00bcd4; /* Ciano leggermente più morbido */
-    --accent-color: #ff6f61; /* Corallo per allarme */
-    --dark-background: #08080a; /* Sfondo ultra scuro e profondo */
-    --light-text: #e0e0e0;
-    --secondary-text: #a0a0a0;
-    --font-stack: 'Montserrat', sans-serif;
+    --primary-color: #00e5ff; /* Ciano Elettrico */
+    --accent-color: #ff5252; /* Rosso Intenso per Urgenza */
+    --dark-background: #000005; /* Nero Profondo, Quasi Assoluto */
+    --panel-background: rgba(10, 10, 20, 0.7); /* Base per l'effetto vetro */
+    --glass-blur: 10px;
+    --light-text: #f0f0f0;
+    --font-stack: 'Montserrat', 'Orbitron', sans-serif;
 }
 
-/* Stile Globale e Transizioni Fluidi */
+/* Base e Smoothness */
 * {
-    /* Migliora la percezione della fluidità */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    box-sizing: border-box; /* Assicura che padding e border siano inclusi nella larghezza */
+    box-sizing: border-box; 
+    transition: background-color 0.5s, color 0.5s; /* Transizioni di base per la fluidità */
 }
 
 body {
     font-family: var(--font-stack);
     margin: 0;
-    padding: 0;
     background-color: var(--dark-background);
     color: var(--light-text);
-    line-height: 1.6;
-    background-image: url('dark-texture.jpg'); 
-    background-attachment: fixed; 
-    background-size: cover;
+    perspective: 1000px; /* Per parallasse 3D */
+    overflow-x: hidden;
 }
 
-/* Hero Section */
+/* HERO Section: Maschera e Cinematografia */
 .hero {
     /* ... (stili hero precedenti) ... */
     height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    overflow: hidden;
 }
 
-.hero h1 {
-    font-size: 5.5em; 
+.hero-overlay {
+    /* Overlay più scuro per il dramma */
+    background: linear-gradient(to top, var(--dark-background) 0%, rgba(0, 0, 0, 0.8) 100%);
+    opacity: 0.95; 
+}
+
+#hero-title {
+    font-family: 'Orbitron', sans-serif; /* Font futuristico */
+    font-size: 7em; 
     font-weight: 900;
-    letter-spacing: 5px; 
+    letter-spacing: 10px; 
+    text-transform: uppercase;
     color: var(--primary-color);
-    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); 
+    text-shadow: 0 0 20px var(--primary-color); 
+    mix-blend-mode: screen; /* Per un effetto di fusione con lo sfondo */
 }
 
-/* Stile per le singole parole animate (aggiunto da JS) */
-.word-split {
-    display: inline-block;
-    white-space: nowrap; 
-}
-
-/* Sezioni Generali: Centratura Garantita */
+/* Sezioni Generali: Titoli drammatici */
 .section {
     padding: 100px 5%;
     max-width: 1200px;
-    margin: 0 auto; /* Centratura orizzontale */
+    margin: 0 auto; 
     text-align: center;
-}
-
-/* STILI SCROLL-TELLING (#dati) */
-#dati {
-    /* Rimuoviamo il padding top per attaccarci alla sezione precedente */
-    padding-top: 0; 
-    padding-bottom: 0;
-    /* Gradiente per unire la sezione precedente in modo più smooth */
-    background: linear-gradient(to bottom, var(--dark-background) 0%, #08080a 5%); 
-    min-height: 100vh; /* Base minima */
-}
-
-.scroll-container {
     position: relative;
-    height: 100vh;
+    z-index: 5; /* Assicura che sia sopra lo sfondo fisso */
+}
+
+.section h2 {
+    font-size: 3.2em;
+    color: var(--primary-color);
+    margin-bottom: 50px;
+    border-bottom: 5px double var(--primary-color); /* Doppio bordo drammatico */
+    display: inline-block;
+    padding-bottom: 15px;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+.sub-text {
+    color: var(--secondary-text);
+    font-style: italic;
+    font-size: 1.1em;
+}
+
+/* Contatore (Aggiunta di Glow Dinamico) */
+.stat-box {
+    margin-top: 60px;
+    padding: 60px;
+    background: var(--panel-background);
+    border-radius: 15px;
+    box-shadow: 0 0 50px rgba(255, 82, 82, 0.3); /* Ombra rossa per allarme */
+    border: 1px solid rgba(255, 82, 82, 0.5);
+    backdrop-filter: blur(var(--glass-blur)); /* EFFETTO VETRO SMERIGLIATO */
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-indicator {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.8;
+    z-index: -1;
+    transition: transform 0.5s ease-out; /* Animato da JS */
+}
+
+.big-number {
+    font-size: 8em; /* Più grande */
+    font-weight: 900;
+}
+
+/* SCROLL-TELLING SECTION: Dati */
+#dati {
+    padding-top: 0;
+    padding-bottom: 0;
+    /* Rimuovi il gradiente per affidarci totalmente a GSAP per la transizione */
+    background: transparent; 
+    min-height: 100vh;
+}
+
+/* Stili per i pannelli (Frosted Glass) */
+.panel-content {
+    background: var(--panel-background);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+    padding: 50px;
+    border-radius: 20px;
+    max-width: 800px;
+    text-align: center;
+    margin: 0 auto;
+    /* EFFETTO VETRO */
+    backdrop-filter: blur(var(--glass-blur)); 
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    transition: transform 0.5s;
 }
 
 .data-panel {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 5%;
-    opacity: 0; 
-    pointer-events: none; 
+    /* Impostazione per il parallasse interno */
+    transform-style: preserve-3d;
 }
 
-.panel-content {
-    background: rgba(13, 13, 16, 0.9);
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 0 30px rgba(0, 229, 255, 0.3), inset 0 0 15px rgba(0, 229, 255, 0.1);
-    padding: 40px;
-    border-radius: 10px;
-    max-width: 800px;
+.data-visual {
+    /* Aggiungiamo un leggero bordo 3D */
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4), 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Lista Azioni: Più enfasi futuristica */
+.action-list {
+    list-style: none;
+    padding: 0;
+    margin: 40px auto 0 auto; 
+    max-width: 900px;
+}
+
+.action-list li {
+    background: linear-gradient(90deg, #1a1a25, #0a0a10);
+    margin: 18px 0;
+    padding: 25px;
+    border-left: 6px solid var(--primary-color);
+    text-align: left;
+    transition: transform 0.4s, box-shadow 0.4s;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.action-list li:hover {
+    transform: translateX(15px);
+    box-shadow: 0 5px 25px rgba(0, 229, 255, 0.5);
+    background: linear-gradient(90deg, #252535, #101015);
+}
+
+/* Footer: Minimalista */
+footer {
     text-align: center;
-    margin: 0 auto; /* Centratura esplicita */
+    padding: 40px;
+    background-color: var(--dark-background);
+    color: var(--secondary-text);
+    font-size: 0.9em;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
-
-/* ... (Altri stili come .key-stat, .water-level, ecc. rimangono uguali) ... */
