@@ -3,61 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clima: Una Riflessione Globale</title>
+    <title>CRISI CLIMATICA: La Riflessione Finale</title>
+    
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
 </head>
 <body>
 
     <header class="hero">
         <div class="hero-overlay"></div>
-        <video id="background-video" autoplay loop muted poster="placeholder-image.jpg">
+        <video id="background-video" autoplay loop muted playsinline poster="placeholder-image.jpg">
             <source src="background-video.mp4" type="video/mp4">
         </video>
         <div class="hero-content">
-            <h1>Il Punto di Non Ritorno?</h1>
-            <p>Una riflessione critica e basata sui dati sul futuro del nostro pianeta.</p>
-            <a href="#dati" class="cta-button">Esplora i Dati</a>
+            <h1 id="hero-title">CRISI CLIMATICA:</h1>
+            <h2 id="hero-subtitle">Il Punto di Non Ritorno?</h2>
+            <p id="hero-quote">La nostra risposta definirà il futuro.</p>
+            <a href="#impatto" id="cta-button" class="cta-button">Inizia la Riflessione</a> 
         </div>
     </header>
 
     <section id="impatto" class="section">
-        <h2>L'Urgenza del Cambiamento</h2>
-        <p>Ogni frazione di grado conta. I dati mostrano un'accelerazione senza precedenti...</p>
-        <div class="stat-box">
-            <span>+1.2°C</span>
-            <small>Aumento della Temperatura Media (vs Pre-Industriale)</small>
+        <h2 data-aos="fade-up">L'Urgenza del Cambiamento</h2> 
+        <p data-aos="fade-up" data-aos-delay="200">Ogni frazione di grado conta. I dati mostrano un'accelerazione senza precedenti. Il tempo per l'azione non è domani, è ora.</p>
+        
+        <div class="stat-box" data-aos="zoom-in" data-aos-delay="400">
+            <span id="temp-counter" class="big-number">0.0°C</span> 
+            <small>Aumento della Temperatura Media Globale (vs Pre-Industriale)</small>
         </div>
     </section>
 
     <section id="dati" class="section dark">
-        <h2>Dati e Proiezioni</h2>
-        <div class="data-grid">
-            <div class="data-item">
-                <h3>Livello del Mare</h3>
-                <p>Aumento medio di 3.7mm all'anno dal 2006. </p>
+        <h2 data-aos="fade-up" data-aos-anchor="#dati-h2-anchor">Dati e Proiezioni: La Crisi in Cifre</h2>
+        
+        <div class="scroll-container">
+            
+            <div class="data-panel" id="panel-1">
+                <div class="panel-content">
+                    <h3 class="panel-title">1. L'Oceano in Crescita</h3>
+                    <p class="panel-text">L'innalzamento del livello del mare minaccia le coste globali. Due terzi provengono dallo scioglimento dei ghiacci, un terzo dall'espansione termica.</p>
+                    <div class="data-visual sea-level-chart">
+                        <div class="water-level"></div>
+                    </div>
+                    <span class="key-stat">3.7 mm/anno</span>
+                </div>
             </div>
-            <div class="data-item">
-                <h3>Emissioni CO2</h3>
-                <p>La concentrazione atmosferica ha superato le 420 ppm. 
-
-[Image of CO2 concentration chart]
-</p>
+            
+            <div class="data-panel" id="panel-2">
+                <div class="panel-content">
+                    <h3 class="panel-title">2. CO2: La Trappola Atmosferica</h3>
+                    <p class="panel-text">La concentrazione di anidride carbonica è la più alta da 3 milioni di anni. L'effetto serra si intensifica senza sosta.</p>
+                    <div class="data-visual co2-gauge">
+                        <div class="gauge-fill"></div>
+                    </div>
+                    <span class="key-stat">420+ ppm</span>
+                </div>
             </div>
-            <div class="data-item">
-                <h3>Ghiacciai</h3>
-                <p>Perdita media di massa di 267 Gt all'anno. </p>
+            
+            <div class="data-panel" id="panel-3">
+                <div class="panel-content">
+                    <h3 class="panel-title">3. Il Crollo dei Ghiacciai</h3>
+                    <p class="panel-text">La perdita di massa della Groenlandia e dell'Antartide accelera. Questi dati sono la prova fisica della crisi.</p>
+                    <div class="data-visual glacier-melt-graphic">
+                        <div class="glacier-top"></div>
+                    </div>
+                    <span class="key-stat">267 Gt/anno</span>
+                </div>
             </div>
+            
+            <div class="scroll-spacer"></div> 
         </div>
     </section>
 
     <section id="soluzioni" class="section">
-        <h2>Il Nostro Ruolo: Azione e Speranza</h2>
-        <p>La transizione ecologica non è solo un dovere, ma un'opportunità per ridisegnare la società...</p>
+        <h2 data-aos="fade-right">Il Nostro Ruolo: Azione e Speranza</h2>
+        <p data-aos="fade-right" data-aos-delay="100">La transizione ecologica non è solo un dovere, ma un'opportunità per ridisegnare la società. Non è troppo tardi per agire.</p>
         <ul class="action-list">
-            <li>Investire in energie rinnovabili</li>
-            <li>Promuovere l'economia circolare</li>
-            <li>Sensibilizzare la comunità</li>
+            <li data-aos="zoom-in" data-aos-delay="100">Investire subito in energie rinnovabili pulite e distribuite.</li>
+            <li data-aos="zoom-in" data-aos-delay="200">Promuovere l'economia circolare e ridurre il consumo "usa e getta".</li>
+            <li data-aos="zoom-in" data-aos-delay="300">Sensibilizzare la comunità: il cambiamento parte dalla comprensione.</li>
         </ul>
     </section>
 
@@ -65,6 +92,10 @@
         <p>&copy; 2025 Riflessione Climatica. Sito creato per un progetto GitHub Pages.</p>
     </footer>
 
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
     <script src="script.js"></script>
 </body>
 </html>
